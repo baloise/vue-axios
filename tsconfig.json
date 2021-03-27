@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "allowUnreachableCode": false,
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "lib": ["dom", "es2020"],
+    "module": "es2015",
+    "target": "es2017",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "outDir": "dist-transpiled",
+    "declarationDir": "dist/types",
+    "removeComments": false,
+    "sourceMap": true,
+    "jsx": "react",
+    "types": ["@types/jest"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules"],
+  "compileOnSave": false,
+  "buildOnSave": false
+}
