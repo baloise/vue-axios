@@ -11,7 +11,7 @@
 
 import { AxiosRequestConfig, AxiosInterceptorManager, AxiosResponse } from 'axios'
 import { Plugin } from 'vue'
-import { $http } from './axios'
+import { $axios } from './axios'
 
 export interface HttpConfig {
   defaults?: AxiosRequestConfig
@@ -23,11 +23,11 @@ export interface HttpConfig {
 
 export const http: Plugin = {
   async install(app, config: HttpConfig = {}) {
-    $http.defaults = {
-      ...$http.defaults,
+    $axios.defaults = {
+      ...$axios.defaults,
       ...config.defaults,
     }
 
-    app.config.globalProperties.$http = $http
+    app.config.globalProperties.$http = $axios
   },
 }

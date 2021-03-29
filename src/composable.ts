@@ -1,5 +1,12 @@
 import { ref, Ref } from 'vue'
 import Axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import { $axios } from './axios'
+import { isPromise } from './util'
+
+export interface RequestArgs {
+  url: string
+  options: AxiosRequestConfig
+}
 
 export interface HttpResponse<T, E> {
   data: Ref<T | undefined>
@@ -18,7 +25,7 @@ export interface HttpClient<T, E> extends HttpResponse<T, E> {
   send: (config: AxiosRequestConfig) => Promise<void>
 }
 
-export function useHttp<T, E>(instance: AxiosInstance): HttpClient<T, E> {
+export function useAxios<T, E>(instance: AxiosInstance = $axios): HttpClient<T, E> {
   const CancelToken = Axios.CancelToken
   const source = CancelToken.source()
 
@@ -58,8 +65,16 @@ export function useHttp<T, E>(instance: AxiosInstance): HttpClient<T, E> {
     data.value = httpResponse.data
   }
 
-  async function send(config: AxiosRequestConfig): Promise<void> {
+  async function send(config: AxiosRequestConfig): Promise<void>
+  async function send(config: Promise<RequestArgs>): Promise<void>
+  async function send(config: AxiosRequestConfig | Promise<RequestArgs>): Promise<void> {
     reset()
+
+    if (isPromise(config)) {
+      const { url, options } = (await config) as RequestArgs
+      config = { url, ...options }
+    }
+
     try {
       const httpResponse = await instance.request<T>({
         ...config,
