@@ -22,7 +22,7 @@ export interface HttpResponse<T, E> {
 export interface HttpClient<T, E> extends HttpResponse<T, E> {
   isPending: Ref<boolean>
   cancel: () => void
-  send: (config: AxiosRequestConfig) => Promise<void>
+  send: (config: AxiosRequestConfig | Promise<RequestArgs>) => Promise<void>
 }
 
 export function useAxios<T, E>(instance: AxiosInstance = $axios): HttpClient<T, E> {
