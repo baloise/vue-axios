@@ -1,7 +1,7 @@
 {
-  "name": "hirsch-vue-form",
+  "name": "@baloise/vue-axios",
   "version": "0.0.0",
-  "description": "Reactive form validation for Vue 3.x.x",
+  "description": "Wrapper for the axios package to use with the composition api of Vue 3",
   "author": {
     "name": "Gery Hirschfeld",
     "email": "gerhard.hirschfeld@baloise.ch",
@@ -26,7 +26,8 @@
     "dist/"
   ],
   "keywords": [
-    "vue"
+    "vue",
+    "axios"
   ],
   "license": "MIT",
   "devDependencies": {
@@ -35,6 +36,7 @@
     "@typescript-eslint/parser": "^4.19.0",
     "@vue/eslint-config-prettier": "^6.0.0",
     "@vue/eslint-config-typescript": "^7.0.0",
+    "axios": "^0.21.1",
     "eslint": "^7.23.0",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-vue": "^7.8.0",
