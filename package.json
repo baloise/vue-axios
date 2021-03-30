@@ -1,6 +1,6 @@
 {
   "name": "@baloise/vue-axios",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Wrapper for the axios package to use with the composition api of Vue 3",
   "author": {
     "name": "Gery Hirschfeld",

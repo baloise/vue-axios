@@ -22,7 +22,11 @@ export interface HttpResponse<T, E> {
 export interface HttpClient<T, E> extends HttpResponse<T, E> {
   isPending: Ref<boolean>
   cancel: () => void
-  send: (config: AxiosRequestConfig | Promise<RequestArgs>) => Promise<void>
+  request: (config: AxiosRequestConfig | Promise<RequestArgs>) => Promise<void>
+  get: (url: string, config: AxiosRequestConfig) => Promise<void>
+  post: (url: string, config: AxiosRequestConfig) => Promise<void>
+  put: (url: string, config: AxiosRequestConfig) => Promise<void>
+  remove: (url: string, config: AxiosRequestConfig) => Promise<void>
 }
 
 export function useAxios<T, E>(instance: AxiosInstance = $axios): HttpClient<T, E> {
@@ -65,9 +69,9 @@ export function useAxios<T, E>(instance: AxiosInstance = $axios): HttpClient<T, 
     data.value = httpResponse.data
   }
 
-  async function send(config: AxiosRequestConfig): Promise<void>
-  async function send(config: Promise<RequestArgs>): Promise<void>
-  async function send(config: AxiosRequestConfig | Promise<RequestArgs>): Promise<void> {
+  async function request(config: AxiosRequestConfig): Promise<void>
+  async function request(config: Promise<RequestArgs>): Promise<void>
+  async function request(config: AxiosRequestConfig | Promise<RequestArgs>): Promise<void> {
     reset()
 
     if (isPromise(config)) {
@@ -89,6 +93,22 @@ export function useAxios<T, E>(instance: AxiosInstance = $axios): HttpClient<T, 
     }
   }
 
+  function get(url: string, config: AxiosRequestConfig): Promise<void> {
+    return request({ ...config, method: 'GET', url })
+  }
+
+  function post(url: string, config: AxiosRequestConfig): Promise<void> {
+    return request({ ...config, method: 'POST', url })
+  }
+
+  function put(url: string, config: AxiosRequestConfig): Promise<void> {
+    return request({ ...config, method: 'PUT', url })
+  }
+
+  function remove(url: string, config: AxiosRequestConfig): Promise<void> {
+    return request({ ...config, method: 'DELETE', url })
+  }
+
   return {
     data,
     error,
@@ -99,7 +119,11 @@ export function useAxios<T, E>(instance: AxiosInstance = $axios): HttpClient<T, 
     isSuccessful,
     isCancelled,
     cancelledMessage,
-    send,
     cancel,
+    request,
+    get,
+    post,
+    put,
+    remove,
   }
 }
