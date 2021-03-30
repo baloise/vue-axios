@@ -14,11 +14,11 @@ npm install axios @baloise/vue-axios
 
 ```typescript
 import { createApp } from 'vue'
-import { http } from '@baloise/vue-axios'
+import { vueAxios } from '@baloise/vue-axios'
 import App from './app/App.vue'
 
 createApp(App)
-  .use(http, {
+  .use(vueAxios, {
     // defaults: AxiosRequestConfig
     // interceptors: {
     //   request: AxiosInterceptorManager<AxiosRequestConfig>;
@@ -44,7 +44,7 @@ CatApi.get('/facts') ...
 
 ```typescript
 import { computed, defineComponent } from 'vue'
-import { useHttp } from '@baloise/vue-axios'
+import { useAxios } from '@baloise/vue-axios'
 import { CatApi } from '../api/cat.api'
 
 type CatFacts = { text: string }[]
