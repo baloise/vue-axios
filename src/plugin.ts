@@ -9,23 +9,15 @@
  * https://github.com/mzabriskie/axios
  */
 
-import { AxiosRequestConfig, AxiosInterceptorManager, AxiosResponse } from 'axios'
+import { AxiosRequestConfig } from 'axios'
 import { Plugin } from 'vue'
 import { $axios } from './axios'
 
-export interface AxiosPluginConfig {
-  defaults?: AxiosRequestConfig
-  interceptors?: {
-    request: AxiosInterceptorManager<AxiosRequestConfig>
-    response: AxiosInterceptorManager<AxiosResponse>
-  }
-}
-
 export const vueAxios: Plugin = {
-  async install(app, config: AxiosPluginConfig = {}) {
+  async install(app, config: AxiosRequestConfig = {}) {
     $axios.defaults = {
       ...$axios.defaults,
-      ...config.defaults,
+      ...config,
     }
 
     app.config.globalProperties.$axios = $axios
