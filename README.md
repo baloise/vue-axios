@@ -254,6 +254,8 @@ openapi-generator-cli generate -i path-to/swagger.yaml -g typescript-axios -o ge
 
 Move the generated SDK code into your project. Then define the base configuration of your API and for each endpoint create the param creator.
 
+Have a look into our awesome [@baloise/vue-keycloak](https://github.com/baloise/vue-keycloak) library.
+
 ```typescript
 import { Configuration, UsersApiAxiosParamCreator } from './generated'
 import { getToken } from '@baloise/vue-keycloak'
