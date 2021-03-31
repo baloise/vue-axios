@@ -31,9 +31,9 @@ createApp(App)
 ## Create new instance
 
 ```typescript
-import { $http } from '@baloise/vue-axios'
+import { $axios } from '@baloise/vue-axios'
 
-export const CatApi = $http.create({
+export const CatApi = $axios.create({
   baseURL: 'https://cat-fact.herokuapp.com',
 })
 
@@ -51,10 +51,10 @@ type CatFacts = { text: string }[]
 
 export default defineComponent({
   setup() {
-    const { send, data, isPending, isSuccessful } = useHttp<CatFacts, undefined>(CatApi)
+    const { get, data, isPending, isSuccessful } = useAxios<CatFacts, undefined>(CatApi)
 
     function callApi() {
-      send({ url: '/facts' })
+      get('/facts')
     }
 
     const response = computed(() => data.value?[0].text
