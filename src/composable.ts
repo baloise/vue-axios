@@ -8,9 +8,10 @@ export interface RequestArgs {
   options: AxiosRequestConfig
 }
 
-export interface AxiosResponseComposables<T, E> {
+export interface AxiosResponseComposables<T, E = unknown, H = unknown> {
   data: Ref<T | undefined>
   error: Ref<E | undefined>
+  headers: Ref<H>
   status: Ref<number>
   statusText: Ref<string>
   cancelledMessage: Ref<string>
@@ -19,17 +20,20 @@ export interface AxiosResponseComposables<T, E> {
   isCancelled: Ref<boolean>
 }
 
-export interface AxiosComposables<T, E> extends AxiosResponseComposables<T, E> {
+export interface AxiosComposables<T, E = unknown> extends AxiosResponseComposables<T, E> {
   isPending: Ref<boolean>
   cancel: () => void
   request: (config: AxiosRequestConfig | Promise<RequestArgs>) => Promise<void>
   get: (url: string, config: AxiosRequestConfig) => Promise<void>
-  post: (url: string, config: AxiosRequestConfig) => Promise<void>
-  put: (url: string, config: AxiosRequestConfig) => Promise<void>
+  head: (url: string, config: AxiosRequestConfig) => Promise<void>
+  options: (url: string, config: AxiosRequestConfig) => Promise<void>
+  post: (url: string, data: T, config: AxiosRequestConfig) => Promise<void>
+  put: (url: string, data: T, config: AxiosRequestConfig) => Promise<void>
+  patch: (url: string, data: T, config: AxiosRequestConfig) => Promise<void>
   remove: (url: string, config: AxiosRequestConfig) => Promise<void>
 }
 
-export function useAxios<T, E>(instance: AxiosInstance = $axios): AxiosComposables<T, E> {
+export function useAxios<T, E = unknown, H = unknown>(instance: AxiosInstance = $axios): AxiosComposables<T, E> {
   const CancelToken = Axios.CancelToken
   const source = CancelToken.source()
 
@@ -42,6 +46,7 @@ export function useAxios<T, E>(instance: AxiosInstance = $axios): AxiosComposabl
   const cancelledMessage = ref<string>()
   const error = ref<E>()
   const data = ref<T>()
+  const headers = ref<H>()
 
   function cancel(message?: string) {
     source.cancel(message)
@@ -67,6 +72,7 @@ export function useAxios<T, E>(instance: AxiosInstance = $axios): AxiosComposabl
     statusText.value = response.statusText
     hasFailed.value = !isSuccessful.value
     data.value = response.data
+    headers.value = response.headers
   }
 
   async function request(config: AxiosRequestConfig): Promise<void>
@@ -97,12 +103,24 @@ export function useAxios<T, E>(instance: AxiosInstance = $axios): AxiosComposabl
     return request({ ...config, method: 'GET', url })
   }
 
-  function post(url: string, config: AxiosRequestConfig): Promise<void> {
-    return request({ ...config, method: 'POST', url })
+  function head(url: string, config: AxiosRequestConfig): Promise<void> {
+    return request({ ...config, method: 'HEAD', url })
   }
 
-  function put(url: string, config: AxiosRequestConfig): Promise<void> {
-    return request({ ...config, method: 'PUT', url })
+  function options(url: string, config: AxiosRequestConfig): Promise<void> {
+    return request({ ...config, method: 'OPTIONS', url })
+  }
+
+  function post(url: string, data: T, config: AxiosRequestConfig): Promise<void> {
+    return request({ ...config, method: 'POST', url, data })
+  }
+
+  function put(url: string, data: T, config: AxiosRequestConfig): Promise<void> {
+    return request({ ...config, method: 'PUT', url, data })
+  }
+
+  function patch(url: string, data: T, config: AxiosRequestConfig): Promise<void> {
+    return request({ ...config, method: 'PATCH', url, data })
   }
 
   function remove(url: string, config: AxiosRequestConfig): Promise<void> {
@@ -112,6 +130,7 @@ export function useAxios<T, E>(instance: AxiosInstance = $axios): AxiosComposabl
   return {
     data,
     error,
+    headers,
     status,
     statusText,
     isPending,
@@ -122,7 +141,10 @@ export function useAxios<T, E>(instance: AxiosInstance = $axios): AxiosComposabl
     cancel,
     request,
     get,
+    head,
+    options,
     post,
+    patch,
     put,
     remove,
   }
