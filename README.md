@@ -1,12 +1,12 @@
 <table align="center" cellspacing="0" cellpadding="0" style="border: none;">
-<tr>
-  <td>
+<tr style="border: none;">
+  <td style="border: none;">
     <img width="200px" src="https://vuejs.org/images/logo.png" />
   </td>
-  <td>
+  <td style="border: none;">
     <span style="font-size: 10em">+</span>
   </td>
-  <td>
+  <td style="border: none;">
     <img width="200px" src="https://axios-http.com/assets/logo.svg" />
   </td>
 </tr>
