@@ -1,4 +1,4 @@
-<table align="center">
+<table align="center" cellspacing="0" cellpadding="0" style="border: none;">
 <tr>
   <td>
     <img width="200px" src="https://vuejs.org/images/logo.png" />
