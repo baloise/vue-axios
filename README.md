@@ -1,4 +1,18 @@
-# @baloise/vue-axios
+<table align="center">
+<tr>
+  <td>
+    <img width="200px" src="https://vuejs.org/images/logo.png" />
+  </td>
+  <td>
+    <span style="font-size: 10em">+</span>
+  </td>
+  <td>
+    <img width="200px" src="https://axios-http.com/assets/logo.svg" />
+  </td>
+</tr>
+</table>
+
+# vue-axios
 
 Wrapper for the axios package to use with the composition api of Vue 3
 
