@@ -17,7 +17,8 @@
     "lint": "eslint src --ext .ts,vue",
     "format": "npm run prettier:write",
     "prettier:write": "prettier --write \"./src\"",
-    "prettier:check": "prettier --check \"./src\""
+    "prettier:check": "prettier --check \"./src\"",
+    "release": "semantic-release"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.esm.js",
@@ -31,6 +32,10 @@
   ],
   "license": "MIT",
   "devDependencies": {
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/git": "^9.0.0",
+    "@semantic-release/github": "^7.2.0",
+    "@semantic-release/npm": "^7.1.0",
     "@types/jest": "^26.0.22",
     "@typescript-eslint/eslint-plugin": "^4.19.0",
     "@typescript-eslint/parser": "^4.19.0",
@@ -44,6 +49,7 @@
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
     "rollup": "^2.43.0",
+    "semantic-release": "^17.4.2",
     "ts-jest": "^26.5.4",
     "typescript": "^4.2.3",
     "vue": "^3.0.8"
