@@ -1,4 +1,18 @@
-# @baloise/vue-axios
+<table align="center">
+<tr>
+  <td>
+    <img width="200px" src="https://vuejs.org/images/logo.png" />
+  </td>
+  <td>
+    <span style="font-size: 10em">+</span>
+  </td>
+  <td>
+    <img width="200px" src="https://axios-http.com/assets/logo.svg" />
+  </td>
+</tr>
+</table>
+
+# vue-axios
 
 Wrapper for the axios package to use with the composition api of Vue 3
 
@@ -14,11 +28,11 @@ npm install axios @baloise/vue-axios
 
 ```typescript
 import { createApp } from 'vue'
-import { http } from '@baloise/vue-axios'
+import { vueAxios } from '@baloise/vue-axios'
 import App from './app/App.vue'
 
 createApp(App)
-  .use(http, {
+  .use(vueAxios, {
     // defaults: AxiosRequestConfig
     // interceptors: {
     //   request: AxiosInterceptorManager<AxiosRequestConfig>;
@@ -31,9 +45,9 @@ createApp(App)
 ## Create new instance
 
 ```typescript
-import { $http } from '@baloise/vue-axios'
+import { $axios } from '@baloise/vue-axios'
 
-export const CatApi = $http.create({
+export const CatApi = $axios.create({
   baseURL: 'https://cat-fact.herokuapp.com',
 })
 
@@ -44,17 +58,17 @@ CatApi.get('/facts') ...
 
 ```typescript
 import { computed, defineComponent } from 'vue'
-import { useHttp } from '@baloise/vue-axios'
+import { useAxios } from '@baloise/vue-axios'
 import { CatApi } from '../api/cat.api'
 
 type CatFacts = { text: string }[]
 
 export default defineComponent({
   setup() {
-    const { send, data, isPending, isSuccessful } = useHttp<CatFacts, undefined>(CatApi)
+    const { get, data, isPending, isSuccessful } = useAxios<CatFacts, undefined>(CatApi)
 
     function callApi() {
-      send({ url: '/facts' })
+      get('/facts')
     }
 
     const response = computed(() => data.value?[0].text

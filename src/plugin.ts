@@ -13,7 +13,7 @@ import { AxiosRequestConfig, AxiosInterceptorManager, AxiosResponse } from 'axio
 import { Plugin } from 'vue'
 import { $axios } from './axios'
 
-export interface HttpConfig {
+export interface AxiosPluginConfig {
   defaults?: AxiosRequestConfig
   interceptors?: {
     request: AxiosInterceptorManager<AxiosRequestConfig>
@@ -21,13 +21,13 @@ export interface HttpConfig {
   }
 }
 
-export const http: Plugin = {
-  async install(app, config: HttpConfig = {}) {
+export const vueAxios: Plugin = {
+  async install(app, config: AxiosPluginConfig = {}) {
     $axios.defaults = {
       ...$axios.defaults,
       ...config.defaults,
     }
 
-    app.config.globalProperties.$http = $axios
+    app.config.globalProperties.$axios = $axios
   },
 }
