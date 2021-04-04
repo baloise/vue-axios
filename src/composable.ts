@@ -1,7 +1,7 @@
 import { ref, Ref } from 'vue'
 import Axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { $axios } from './axios'
-import { isPromise } from './util'
+import { isPromise } from './utils'
 
 export interface RequestArgs {
   url: string
@@ -41,7 +41,7 @@ export function useAxios<T, E = unknown, H = unknown>(instance: AxiosInstance = 
   const isPending = ref(false)
   const hasFailed = ref(false)
   const isSuccessful = ref(false)
-  const status = ref<number>(0)
+  const status = ref<number>()
   const statusText = ref<string>()
   const cancelledMessage = ref<string>()
   const error = ref<E>()

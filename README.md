@@ -149,7 +149,7 @@ export default defineComponent({
 ### useAxios
 
 The `useAxios` function accepts a custom axios instance, otherwise it uses the global `$axios` instance.
-The `$axios` instance is defined in the plugin options with the default & interceptor props.
+The `$axios` instance is defined in the plugin options with the default config.
 
 ```typescript
 import { useAxios } from '@baloise/vue-axios'

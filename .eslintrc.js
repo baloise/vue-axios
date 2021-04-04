@@ -16,9 +16,12 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['**/src/**/*.spec.{j,t}s?(x)'],
+      files: ['**/src/**/*.test.{j,t}s?(x)'],
       env: {
         jest: true,
+      },
+      rules: {
+        '@typescript-eslint/no-explicit-any': 'off',
       },
     },
   ],

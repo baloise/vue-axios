@@ -1,4 +1,4 @@
-import { isPromise } from './util'
+import { isPromise } from './utils'
 
 describe('util', () => {
   describe('isPromise', () => {
