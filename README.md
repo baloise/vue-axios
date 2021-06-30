@@ -16,7 +16,7 @@
 
 A small wrapper library for the simple promise based HTTP client [axios](https://axios-http.com/).
 
-> The library is made for [Vue 3.x.x](https://v3.vuejs.org/) and the [Composiotion API](https://v3.vuejs.org/api/composition-api.html).
+> The library is made for [Vue 3.x.x](https://v3.vuejs.org/) and the [Composition API](https://v3.vuejs.org/api/composition-api.html).
 
 ## Instalation
 
