@@ -3,17 +3,8 @@ import { useAxios } from './composable'
 
 describe('useAxios', () => {
   test('should have the correct inital values', () => {
-    const {
-      cancelledMessage,
-      data,
-      status,
-      statusText,
-      isCancelled,
-      isPending,
-      isSuccessful,
-      hasFailed,
-      headers,
-    } = useAxios()
+    const { cancelledMessage, data, status, statusText, isCancelled, isPending, isSuccessful, hasFailed, headers } =
+      useAxios()
     expect(data.value).toBe(undefined)
     expect(headers.value).toBe(undefined)
     expect(status.value).toBe(undefined)
