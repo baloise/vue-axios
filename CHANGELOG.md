@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/baloise/vue-axios/compare/v1.1.0...v1.2.0) (2021-08-02)
+
+
+### Features
+
+* trigger release ([3eb9f7a](https://github.com/baloise/vue-axios/commit/3eb9f7a39e217d570d050b7b160efaeb3f8ac480))
+
 # [1.1.0](https://github.com/baloise/vue-axios/compare/v1.0.0...v1.1.0) (2021-08-02)
 
 
