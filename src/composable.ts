@@ -1,7 +1,7 @@
 import { ref, Ref } from 'vue'
 import Axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { $axios } from './axios'
-import { isPromise } from './utils'
+import { isPromise, wait } from './utils'
 
 export interface RequestArgs {
   url: string
@@ -24,6 +24,11 @@ export interface AxiosComposables<T, E = unknown> extends AxiosResponseComposabl
   isPending: Ref<boolean>
   cancel: () => void
   request: (config: AxiosRequestConfig | Promise<RequestArgs>) => Promise<void>
+  requestMock: (
+    config: AxiosRequestConfig | Promise<RequestArgs>,
+    response: AxiosResponse<T>,
+    delay?: number,
+  ) => Promise<void>
   get: (url: string, config: AxiosRequestConfig) => Promise<void>
   head: (url: string, config: AxiosRequestConfig) => Promise<void>
   options: (url: string, config: AxiosRequestConfig) => Promise<void>
@@ -99,6 +104,31 @@ export function useAxios<T, E = unknown, H = unknown>(instance: AxiosInstance = 
     }
   }
 
+  async function requestMock(config: AxiosRequestConfig, response: AxiosResponse<T>, delay?: number): Promise<void>
+  async function requestMock(config: Promise<RequestArgs>, response: AxiosResponse<T>, delay?: number): Promise<void>
+  async function requestMock(
+    config: AxiosRequestConfig | Promise<RequestArgs>,
+    response: AxiosResponse<T>,
+    delay?: number,
+  ): Promise<void> {
+    reset()
+
+    if (isPromise(config)) {
+      const { url, options } = (await config) as RequestArgs
+      config = { url, ...options }
+    }
+
+    try {
+      await wait(delay)
+      map(response)
+    } catch (_error) {
+      error.value = _error
+      hasFailed.value = true
+    } finally {
+      isPending.value = false
+    }
+  }
+
   function get(url: string, config: AxiosRequestConfig): Promise<void> {
     return request({ ...config, method: 'GET', url })
   }
@@ -140,6 +170,7 @@ export function useAxios<T, E = unknown, H = unknown>(instance: AxiosInstance = 
     cancelledMessage,
     cancel,
     request,
+    requestMock,
     get,
     head,
     options,
