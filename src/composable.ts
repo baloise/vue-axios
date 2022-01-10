@@ -1,5 +1,5 @@
-import { ref, Ref } from 'vue'
-import Axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import { ref, Ref, shallowRef } from 'vue'
+import Axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { $axios } from './axios'
 import { isPromise, wait } from './utils'
 
@@ -9,20 +9,22 @@ export interface RequestArgs {
 }
 
 export interface AxiosResponseComposables<T, E = unknown, H = unknown> {
+  response: Ref<AxiosResponse<T> | undefined>
   data: Ref<T | undefined>
-  error: Ref<E | undefined>
+  error: Ref<AxiosError<E> | undefined>
   headers: Ref<H>
   status: Ref<number>
   statusText: Ref<string>
-  cancelledMessage: Ref<string>
+  abortMessage: Ref<string>
   hasFailed: Ref<boolean>
+  isFinished: Ref<boolean>
   isSuccessful: Ref<boolean>
-  isCancelled: Ref<boolean>
+  aborted: Ref<boolean>
 }
 
 export interface AxiosComposables<T, E = unknown> extends AxiosResponseComposables<T, E> {
-  isPending: Ref<boolean>
-  cancel: () => void
+  isLoading: Ref<boolean>
+  abort: (message: string) => void
   request: (config: AxiosRequestConfig | Promise<RequestArgs>) => Promise<void>
   requestMock: (
     config: AxiosRequestConfig | Promise<RequestArgs>,
@@ -42,42 +44,48 @@ export function useAxios<T, E = unknown, H = unknown>(instance: AxiosInstance = 
   const CancelToken = Axios.CancelToken
   const source = CancelToken.source()
 
-  const isCancelled = ref(false)
-  const isPending = ref(false)
+  const aborted = ref(false)
+  const abortMessage = ref<string>()
+  const isLoading = ref(false)
   const hasFailed = ref(false)
   const isSuccessful = ref(false)
+  const isFinished = ref(false)
   const status = ref<number>()
   const statusText = ref<string>()
-  const cancelledMessage = ref<string>()
-  const error = ref<E>()
-  const data = ref<T>()
+  const response = shallowRef<AxiosResponse<T>>()
+  const data = shallowRef<T>()
+  const error = shallowRef<AxiosError<E>>()
   const headers = ref<H>()
 
-  function cancel(message?: string) {
+  function abort(message?: string) {
+    if (isFinished.value || !isLoading.value) return
+
     source.cancel(message)
-    cancelledMessage.value = message
+    abortMessage.value = message
   }
 
   function reset() {
+    response.value = undefined
     data.value = undefined
     error.value = undefined
     status.value = 0
     statusText.value = undefined
-    cancelledMessage.value = undefined
-    isPending.value = true
+    abortMessage.value = undefined
+    isLoading.value = true
     hasFailed.value = false
-    isCancelled.value = false
     isSuccessful.value = false
+    aborted.value = false
+    isFinished.value = false
   }
 
-  function map(response: AxiosResponse) {
-    status.value = response.status
-    isSuccessful.value = response.status < 400
-    status.value = response.status
-    statusText.value = response.statusText
+  function map(res: AxiosResponse) {
+    status.value = res.status
+    status.value = res.status
+    statusText.value = res.statusText
+    isSuccessful.value = res.status < 400
     hasFailed.value = !isSuccessful.value
-    data.value = response.data
-    headers.value = response.headers
+    data.value = res.data
+    headers.value = res.headers as any
   }
 
   async function request(config: AxiosRequestConfig): Promise<void>
@@ -91,24 +99,25 @@ export function useAxios<T, E = unknown, H = unknown>(instance: AxiosInstance = 
     }
 
     try {
-      const response = await instance.request<T>({
+      response.value = await instance.request<T>({
         ...config,
         cancelToken: source.token,
       })
-      map(response)
+      map(response.value)
     } catch (_error) {
       error.value = _error
       hasFailed.value = true
     } finally {
-      isPending.value = false
+      isLoading.value = false
+      isFinished.value = true
     }
   }
 
-  async function requestMock(config: AxiosRequestConfig, response: AxiosResponse<T>, delay?: number): Promise<void>
-  async function requestMock(config: Promise<RequestArgs>, response: AxiosResponse<T>, delay?: number): Promise<void>
+  async function requestMock(config: AxiosRequestConfig, res: AxiosResponse<T>, delay?: number): Promise<void>
+  async function requestMock(config: Promise<RequestArgs>, res: AxiosResponse<T>, delay?: number): Promise<void>
   async function requestMock(
     config: AxiosRequestConfig | Promise<RequestArgs>,
-    response: AxiosResponse<T>,
+    res: AxiosResponse<T>,
     delay?: number,
   ): Promise<void> {
     reset()
@@ -120,12 +129,14 @@ export function useAxios<T, E = unknown, H = unknown>(instance: AxiosInstance = 
 
     try {
       await wait(delay)
-      map(response)
+      response.value = res
+      map(res)
     } catch (_error) {
       error.value = _error
       hasFailed.value = true
     } finally {
-      isPending.value = false
+      isLoading.value = false
+      isFinished.value = true
     }
   }
 
@@ -159,16 +170,18 @@ export function useAxios<T, E = unknown, H = unknown>(instance: AxiosInstance = 
 
   return {
     data,
+    response,
     error,
     headers,
     status,
     statusText,
-    isPending,
+    isLoading: isLoading,
     hasFailed,
     isSuccessful,
-    isCancelled,
-    cancelledMessage,
-    cancel,
+    isFinished,
+    aborted,
+    abortMessage,
+    abort,
     request,
     requestMock,
     get,

@@ -117,7 +117,7 @@ dogApi.post('/facts', {
 
 ## Composition API
 
-To use axios with the composition API import the `useAxios` composable function. `useAxios` return reactive values like `isPending` or functions like `request` to execute a HTTP request.
+To use axios with the composition API import the `useAxios` composable function. `useAxios` return reactive values like `isLoading` or functions like `request` to execute a HTTP request.
 
 The reactive values gets updated when executing a HTTP request.
 
@@ -130,7 +130,7 @@ type CatFacts = { text: string }[]
 
 export default defineComponent({
   setup() {
-    const { get, data, isPending, isSuccessful } = useAxios<CatFacts, undefined>(CatApi)
+    const { get, data, isLoading, isSuccessful } = useAxios<CatFacts, undefined>(CatApi)
 
     function callApi() {
       get('/facts')
@@ -139,7 +139,7 @@ export default defineComponent({
     return {
       callApi,
       data,
-      isPending,
+      isLoading,
       isSuccessful,
     }
   },
@@ -171,28 +171,30 @@ const {
   headers,
   status,
   statusText,
-  cancelledMessage,
+  abortMessage,
 
   // state
-  isPending,
+  isFinished,
+  isLoading,
   isSuccessful,
   hasFailed,
-  isCancelled,
+  aborted,
 } = useAxios()
 ```
 
-| State            | Type      | Description                                                       |
-| ---------------- | --------- | ----------------------------------------------------------------- |
-| data             | `any`     | `data` is the response that was provided by the server.           |
-| error            | `any`     | Promise Error.                                                    |
-| headers          | `any`     | `headers` the HTTP headers that the server responded with.        |
-| status           | `number`  | `status` is the HTTP status code from the server response.        |
-| statusText       | `string`  | `statusText` is the HTTP status message from the server response. |
-| cancelledMessage | `string`  | `cancelledMessage` is the provided message of the cancel action.  |
-| isPending        | `boolean` | If `true` the response of the http call is still pending.         |
-| isSuccessful     | `boolean` | If `true` the response successfully arrived.                      |
-| hasFailed        | `boolean` | If `true` the response has failed.                                |
-| isCancelled      | `boolean` | If `true` the request has been cancelled by the user.             |
+| State        | Type      | Description                                                       |
+| ------------ | --------- | ----------------------------------------------------------------- |
+| data         | `any`     | `data` is the response that was provided by the server.           |
+| error        | `any`     | Promise Error.                                                    |
+| headers      | `any`     | `headers` the HTTP headers that the server responded with.        |
+| status       | `number`  | `status` is the HTTP status code from the server response.        |
+| statusText   | `string`  | `statusText` is the HTTP status message from the server response. |
+| abortMessage | `string`  | `abortMessage` is the provided message of the abort action.       |
+| isFinished   | `boolean` | If `true` the response of the http call is finished.              |
+| isLoading    | `boolean` | If `true` the response of the http call is still pending.         |
+| isSuccessful | `boolean` | If `true` the response successfully arrived.                      |
+| hasFailed    | `boolean` | If `true` the response has failed.                                |
+| aborted      | `boolean` | If `true` the request has been aborted by the user.               |
 
 #### Functions
 
@@ -201,7 +203,7 @@ The `useAxios` function exposes the following functions.
 ```typescript
 import { useAxios } from '@baloise/vue-axios'
 
-const { request, get, post, put, patch, remove, head, options, cancel } = useAxios()
+const { request, get, post, put, patch, remove, head, options, abort } = useAxios()
 ```
 
 ##### request
@@ -227,13 +229,13 @@ put(url[, data[, config]])
 patch(url[, data[, config]])
 ```
 
-##### cancel
+##### abort
 
-Cancels the HTTP request.
+aborts the HTTP request.
 
 ```typescript
-cancel()
-cancel(message: string)
+abort()
+abort(message: string)
 ```
 
 ## Open API Codegen
@@ -294,4 +296,3 @@ export default defineComponent({
 # License
 
 Apache-2.0 Licensed | Copyright © 2021-present Gery Hirschfeld & Contributors
-

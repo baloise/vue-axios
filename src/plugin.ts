@@ -9,15 +9,15 @@
  * https://github.com/mzabriskie/axios
  */
 
-import { AxiosRequestConfig } from 'axios'
+import { AxiosDefaults } from 'axios'
 import { Plugin } from 'vue'
 import { $axios } from './axios'
 
 export const vueAxios: Plugin = {
-  async install(app, config: AxiosRequestConfig = {}) {
+  async install(app, defaults: AxiosDefaults<unknown>) {
     $axios.defaults = {
       ...$axios.defaults,
-      ...config,
+      ...defaults,
     }
 
     app.config.globalProperties.$axios = $axios

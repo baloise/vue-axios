@@ -3,15 +3,14 @@ import { useAxios } from './composable'
 
 describe('useAxios', () => {
   test('should have the correct inital values', () => {
-    const { cancelledMessage, data, status, statusText, isCancelled, isPending, isSuccessful, hasFailed, headers } =
-      useAxios()
+    const { abortMessage, data, status, statusText, aborted, isLoading, isSuccessful, hasFailed, headers } = useAxios()
     expect(data.value).toBe(undefined)
     expect(headers.value).toBe(undefined)
     expect(status.value).toBe(undefined)
     expect(statusText.value).toBe(undefined)
-    expect(cancelledMessage.value).toBe(undefined)
-    expect(isCancelled.value).toBe(false)
-    expect(isPending.value).toBe(false)
+    expect(abortMessage.value).toBe(undefined)
+    expect(aborted.value).toBe(false)
+    expect(isLoading.value).toBe(false)
     expect(isSuccessful.value).toBe(false)
     expect(hasFailed.value).toBe(false)
   })
@@ -24,19 +23,10 @@ describe('useAxios', () => {
       headers: {
         ContentType: 'json',
       },
+      config: {},
     } as AxiosResponse)
-    const {
-      cancelledMessage,
-      data,
-      status,
-      statusText,
-      isCancelled,
-      isPending,
-      isSuccessful,
-      hasFailed,
-      headers,
-      request,
-    } = useAxios({ request: mock } as any)
+    const { abortMessage, data, status, statusText, aborted, isLoading, isSuccessful, hasFailed, headers, request } =
+      useAxios({ request: mock } as any)
 
     await request({ url: '/path' })
 
@@ -44,17 +34,11 @@ describe('useAxios', () => {
     expect(headers.value).toStrictEqual({ ContentType: 'json' })
     expect(status.value).toBe(200)
     expect(statusText.value).toBe('Ok')
-    expect(cancelledMessage.value).toBe(undefined)
-    expect(isCancelled.value).toBe(false)
-    expect(isPending.value).toBe(false)
+    expect(abortMessage.value).toBe(undefined)
+    expect(aborted.value).toBe(false)
+    expect(isLoading.value).toBe(false)
     expect(isSuccessful.value).toBe(true)
     expect(hasFailed.value).toBe(false)
-    expect(mock).toBeCalledWith({
-      url: '/path',
-      cancelToken: {
-        promise: Promise.resolve(),
-      },
-    })
   })
 
   test('should map the failed response', async () => {
@@ -70,12 +54,6 @@ describe('useAxios', () => {
     expect(statusText.value).toBe('Not Found')
     expect(isSuccessful.value).toBe(false)
     expect(hasFailed.value).toBe(true)
-    expect(mock).toBeCalledWith({
-      url: '/path',
-      cancelToken: {
-        promise: Promise.resolve(),
-      },
-    })
   })
 
   test('should set isPending correct', async () => {
@@ -84,12 +62,12 @@ describe('useAxios', () => {
         setTimeout(() => resolve({ status: 200 } as AxiosResponse), 0)
       })
     })
-    const { isPending, request } = useAxios({ request: mock } as any)
+    const { isLoading, request } = useAxios({ request: mock } as any)
 
     const promise = request({ url: '/path' })
 
-    expect(isPending.value).toBe(true)
+    expect(isLoading.value).toBe(true)
     await promise
-    expect(isPending.value).toBe(false)
+    expect(isLoading.value).toBe(false)
   })
 })
