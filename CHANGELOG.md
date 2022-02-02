@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/baloise/vue-axios/compare/v1.2.0...v1.3.0) (2022-01-10)
+
+
+### Features
+
+* update deps and rename variables ([79aadff](https://github.com/baloise/vue-axios/commit/79aadffb949b5b92a7842a93b2bf03bfc850124d))
+
 # [1.2.0](https://github.com/baloise/vue-axios/compare/v1.1.0...v1.2.0) (2021-08-02)
 
 
