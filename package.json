@@ -63,7 +63,7 @@
   },
   "dependencies": {},
   "peerDependencies": {
-    "axios": "^0.24.0",
-    "vue": "^3.1.0"
+    "axios": ">=0.24.0",
+    "vue": ">=3.1.0"
   }
 }
