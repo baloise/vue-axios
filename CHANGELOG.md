@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/baloise/vue-axios/compare/v1.3.1...v1.3.2) (2022-05-06)
+
+
+### Bug Fixes
+
+* add >= to peer deps ([3ca19e2](https://github.com/baloise/vue-axios/commit/3ca19e2a67295df5ea1e7b70a65ca31763c45ab4))
+
 ## [1.3.1](https://github.com/baloise/vue-axios/compare/v1.3.0...v1.3.1) (2022-02-02)
 
 
